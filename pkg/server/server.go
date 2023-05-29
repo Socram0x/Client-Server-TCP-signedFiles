@@ -89,7 +89,9 @@ func handleClientConnection(conn net.Conn, id int) {
 
 	//Save the file which has been sent by the client. This file is not deleted at the end.
 	timestamp := time.Now().Format("20060102150405")
-	fileNameWithTimestamp := fmt.Sprintf("%s_%s.sh", strings.TrimSuffix(conn.RemoteAddr().String(), ".sh"), timestamp)
+	remoteAddr := conn.RemoteAddr().String()
+	remoteIP := strings.Replace(remoteAddr, ":", "_", 1)
+	fileNameWithTimestamp := fmt.Sprintf("%s_%s.sh", strings.TrimSuffix(remoteIP, ".sh"), timestamp)
 	savePath := filepath.Join(saveFolder, fileNameWithTimestamp)
 	file, err := os.Create(savePath)
 	if err != nil {
@@ -106,7 +108,7 @@ func handleClientConnection(conn net.Conn, id int) {
 	// Read the data from the client and write it
 	buffer := make([]byte, 1024)
 	for totalBytesRead < lenBytesFile {
-		bytesRead, err := conn.Read(buffer) //parece q los datos llegan antes y este read no hace nada...
+		bytesRead, err := conn.Read(buffer)
 		if err != nil {
 			if err != io.EOF {
 				fmt.Println("Error receiving file data:", err.Error())
@@ -177,11 +179,6 @@ func handleClientConnection(conn net.Conn, id int) {
 		res.CertificateStatus = "Valid"
 		res.OutputBash = output
 
-	} else {
-
-		res.CertificateStatus = "inValid"
-		res.OutputBash = "Fail"
-
 	}
 	//Sending data to the client
 	_, err = reponseToClient(res, conn)
@@ -208,30 +205,30 @@ func VerifySignature(certFile, bashFile, signature string) (bool, error) {
 	// Load the Certificate
 	certBytes, err := os.ReadFile(certFile)
 	if err != nil {
-		return false, fmt.Errorf("Error al cargar el certificado: %s", err)
+		return false, fmt.Errorf("Error loading certificate: %s", err)
 	}
 
 	// Decode Certificate PEM
 	block, _ := pem.Decode(certBytes)
 	if block == nil {
-		return false, fmt.Errorf("Error al decodificar el certificado PEM")
+		return false, fmt.Errorf("Error decoding PEM certificate")
 	}
 
 	// Parse Certificate X.509
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
-		return false, fmt.Errorf("Error al parsear el certificado X.509: %s", err)
+		return false, fmt.Errorf("Error parsing the X.509 certificate: %s", err)
 	}
 
 	// Decode the base64 signature
 	signatureBytes, err := base64.StdEncoding.DecodeString(signature)
 	if err != nil {
-		fmt.Println("Error al decodificar la firma en base64:", err)
+		fmt.Println("Error decoding signature in base64:", err)
 	}
 	// Read the bashfile
 	fileBytes, err := os.ReadFile(bashFile)
 	if err != nil {
-		fmt.Println("Error al leer el archivo:", err)
+		fmt.Println("Error reading file:", err)
 
 	}
 
@@ -241,14 +238,14 @@ func VerifySignature(certFile, bashFile, signature string) (bool, error) {
 	// Read and discard the first line
 	_, err = reader.ReadString('\n')
 	if err != nil {
-		fmt.Println("Error al leer la primera línea:", err)
+		fmt.Println("Error reading first line:", err)
 
 	}
 
 	// Read the rest of the file
 	bashFileBytes, err := io.ReadAll(reader)
 	if err != nil {
-		fmt.Println("Error al leer el archivo:", err)
+		fmt.Println("Error reading file:", err)
 
 	}
 
@@ -258,7 +255,7 @@ func VerifySignature(certFile, bashFile, signature string) (bool, error) {
 	// Verify the signature
 	err = rsa.VerifyPKCS1v15(cert.PublicKey.(*rsa.PublicKey), crypto.SHA256, hash[:], signatureBytes)
 	if err != nil {
-		return false, fmt.Errorf("Error al verificar la firma: %s", err)
+		return false, fmt.Errorf("Error verifying signature: %s", err)
 	}
 
 	// La firma es válida
@@ -271,21 +268,21 @@ func executebash(shBytes []byte) string {
 	// Create an file to write the bytes from the bash which has to be executed
 	tmpfile, err := os.CreateTemp(saveFolder, "bashtoexecute*.sh")
 	if err != nil {
-		fmt.Println("Error al crear el archivo temporal:", err)
+		fmt.Println("Error creating temporary file:", err)
 		return "Fail"
 	}
 	defer os.Remove(tmpfile.Name()) // delete the temporary file at the end of the function
 
 	_, err = tmpfile.Write(shBytes)
 	if err != nil {
-		fmt.Println("Error al escribir en el archivo temporal:", err)
+		fmt.Println("Error writing to temporary file:", err)
 		return "Fail"
 	}
 
 	// Configure the permisions
 	err = tmpfile.Chmod(0700)
 	if err != nil {
-		fmt.Println("Error al establecer permisos de ejecución:", err)
+		fmt.Println("Error setting execute permissions:", err)
 		return "Fail"
 	}
 	tmpfile.Close()
@@ -297,7 +294,7 @@ func executebash(shBytes []byte) string {
 	output, err := cmd.Output()
 
 	if err != nil {
-		fmt.Println("Error al ejecutar el archivo:", err)
+		fmt.Println("Error executing the file:", err)
 
 	}
 	return string(output)
@@ -342,7 +339,7 @@ func findCorrectKeyCert(directory string) (string, error) {
 		if isCorrectKey(cert) {
 			correctPath = path
 
-			//return fmt.Errorf("Found correct key certificate: %s", path)
+			return filepath.SkipDir
 		}
 
 		return nil

@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	server = "localhost:7777" // Dirección del servidor
+	server = "localhost:7777" // server's address
 
 )
 
@@ -82,11 +82,11 @@ func SendScript(filePath string) string {
 	response1 := make([]byte, 1024)
 	n, err := conn.Read(response1)
 	if err != nil {
-		fmt.Println("Error al recibir la primera respuesta:", err.Error())
+		fmt.Println("Error receiving response:", err.Error())
 		os.Exit(1)
 	}
 	response1 = response1[:n]
-	fmt.Println("Respuesta del servidor:", string(response1))
+	fmt.Println("Response of the server:", string(response1))
 	return string(response1)
 
 }
