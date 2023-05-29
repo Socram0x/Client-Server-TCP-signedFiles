@@ -12,7 +12,7 @@ To build the server binary, follow these steps:
 2. Clone this repository to your local machine.
 3. Open a terminal or command prompt.
 4. Navigate to the cloned repository directory.
-5. Run the build script to generate the server binary. The script will compile the server and save the binary in the same directory.
+5. Run the build script to generate the server binary. The script will compile the server and save the binary in `cmd/server`.
 
 ```bash
 bash build_server.sh
