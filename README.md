@@ -90,12 +90,6 @@ The `file_signed.sh` included in the `cmd/client` directory is signed with the `
 
 The `cert_AlbertoMarcos.pem` certificate is used to verify the authenticity and integrity of the `file_signed.sh` script. The certificate extension for code signing is checked in the function `isCorrectKey()`. Additionally, the server is coded to find the correct certificate. This means, the server searches in a folder to find the correct one. The conditions are hardcoded in the code of the `isCorrectKey()` function.
 
- - checks the certificate extension for code signing, before using the public key to verify the signature.
-
- - accepts concurrent requests (remember to adapt the output to clearly identify which status output refers to which execution)
-
- - can verify the code signature from a set of certificates (which can be stored in a directory accessible by the server)
-
 When the client sends the signed script to the server, the server verifies the signature using the public key associated with the `cert_AlbertoMarcos.pem` certificate. If the signature is valid, the server proceeds with executing the script and provides the appropriate response back to the client.
 
 
