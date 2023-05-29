@@ -19,7 +19,7 @@ bash build_server.sh
 ```
 If the build process is successful, you will see the message "Binary OK" along with the path of the generated binary.
 
-To run the server, execute the following command:
+The server must be run from `cmd/server`, executing the following command:
 
 ```bash
 ./server
@@ -61,7 +61,7 @@ The application includes test cases to ensure the correctness of the client-serv
 This test case verifies the communication between the client and server when a valid signature is sent alongside the file. It ensures that the server correctly processes the client's request and responds with the expected output.
 
 1. The server is started on port 7777.
-2. A client sends a script file with a valid certificate (`file_signed.sh`) to the server using the `SendScript` function.
+2. A client sends a script file with a valid signature (`cmd/client/file_signed.sh`) to the server using the `SendScript` function.
 3. The server receives the file, validates the certificate, and executes the script.
 4. The server sends a response back to the client, indicating that the certificate is valid and providing the output of the executed script.
 5. The test checks if the received response matches the expected response.
@@ -71,7 +71,7 @@ This test case verifies the communication between the client and server when a v
 This test case verifies the behavior of the server when an invalid signature is sent alongside the file. It ensures that the server correctly detects the invalid signature and handles the request accordingly.
 
 1. The server is started on port 7778.
-2. A client sends a script file with an invalid certificate (`file_wrongsigned.sh`) to the server using the `SendScript` function.
+2. A client sends a script file with an invalid signature (`cmd/client/file_wrongsigned.sh`) to the server using the `SendScript` function.
 3. The server receives the file, detects the invalid certificate, and rejects the request.
 4. The server sends a response back to the client, indicating that the certificate is invalid.
 5. The test checks if the received response matches the expected response.
