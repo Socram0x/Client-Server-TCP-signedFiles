@@ -76,7 +76,7 @@ This test case verifies the behavior of the server when an invalid signature is 
 4. The server sends a response back to the client, indicating that the certificate is invalid.
 5. The test checks if the received response matches the expected response.
 
-These test cases cover different scenarios to validate the functionality of the client and server components and ensure proper communication and handling of certificates. Running these test cases provides confidence in the correctness and reliability of the application.
+These test cases cover different scenarios to validate the functionality of the client and server components and ensure proper communication and handling of certificates. 
 
 To execute the test cases, navigate to the `/test` directory and run the following command:
 
