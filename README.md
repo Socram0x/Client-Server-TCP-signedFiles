@@ -40,7 +40,7 @@ server.StartServer("7777")  // Change the port number if needed
 
 The server responds to the client with three lines of information:
 
-1. **Identification**: The first line indicates a unique idenfitication which is created by the server in order to identify each connection:
+1. **Identification**: The first line indicates a unique idenfitication which is created by the server in order to identify each connection.
 
 2. **Validity Status**: The second line indicates the validity of the certificate. It can be one of the following values:
    - "Valid": This means that the certificate provided by the client is valid.
@@ -50,7 +50,7 @@ The server responds to the client with three lines of information:
 
 When the server receives a request from the client and successfully processes it, it sends back these two lines as the response. The validity status helps determine the validity of the certificate, while the output of the Bash script provides any relevant information or results produced during script execution.
 
-It is important for the client to parse and interpret these two lines to understand the response from the server accurately. The validity status assists in determining the trustworthiness of the client's signature, while the Bash script output carries any relevant data or messages generated during script execution.
+It is important for the client to parse and interpret these three lines to understand the response from the server accurately. The validity status assists in determining the trustworthiness of the client's signature, while the Bash script output carries any relevant data or messages generated during script execution.
 
 ### Test Cases
 
