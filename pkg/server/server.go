@@ -144,7 +144,7 @@ func handleClientConnection(conn net.Conn, id int) {
 		fmt.Println("Error reading the first line of the bash:", err.Error())
 		return
 	}
-	//fmt.Println("Signature line:", string(line))
+
 	bashFileBytes, err := io.ReadAll(reader)
 	if err != nil {
 		fmt.Println("Error reading the file:", err)

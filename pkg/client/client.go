@@ -37,7 +37,7 @@ func SendScript(filePath string) string {
 		fmt.Println("Error connecting to server:", err.Error())
 		return "Error"
 	}
-	//defer conn.Close()
+	defer conn.Close()
 
 	// obtaining file info
 	fileInfo, err := file.Stat()
