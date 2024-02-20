@@ -86,9 +86,9 @@ go test -v
 
 ### Signed File and Certificate
 
-The `file_signed.sh` included in the `cmd/client` directory is signed with the private key of `cert_AlbertoMarcos.pem` certificate.
+The `file_signed.sh` included in the `cmd/client` directory is signed with the private key of `cert_*.pem` certificate.
 
-The `cert_AlbertoMarcos.pem` certificate is used to verify the authenticity and integrity of the `file_signed.sh` script. The certificate extension for code signing is checked in the function `isCorrectKey()`. Additionally, the server is coded to find the correct certificate. This means, the server searches in a folder to find the correct one. The conditions are hardcoded in the code of the `isCorrectKey()` function.
+The `cert_*.pem` certificate is used to verify the authenticity and integrity of the `file_signed.sh` script. The certificate extension for code signing is checked in the function `isCorrectKey()`. Additionally, the server is coded to find the correct certificate. This means, the server searches in a folder to find the correct one. The conditions are hardcoded in the code of the `isCorrectKey()` function.
 
 When the client sends the signed script to the server, the server verifies the signature using the public key associated with the `cert_AlbertoMarcos.pem` certificate. If the signature is valid, the server proceeds with executing the script and provides the appropriate response back to the client.
 
@@ -100,7 +100,7 @@ The client sends the bytes of the bash script and then sends the file.
 I did not take consideration about the limit of the file that can be sent by the client.
 The server is coded in order to verify signatures performed with a RSA2048 and SHA256. 
 
-The Certificate which is used by the server is an special one. The common name is alberto.marcos. I mention that because if you want to send another script in order to verify the signature, you have to change the code from `/pkg/server/server.go`  -->`isCorrectKey()`
+The Certificate which is used by the server is an special one. The common name is *. I mention that because if you want to send another script in order to verify the signature, you have to change the code from `/pkg/server/server.go`  -->`isCorrectKey()`
 
 
 
